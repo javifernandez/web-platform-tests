@@ -125,6 +125,7 @@ function run_test() {
               assert_false(signature === undefined, "sign error for test " + vector.name + ": '" + err.message + "'");
               assert_unreached("verify error for test " + vector.name + ": " + err.message + "'");
           };
+          assert_true(equalBuffers(signature, vector.signature), "Signing did not give the expected output");
           assert_true(isVerified, "Round trip verification works");
       }, vector.name + " round trip");
 
@@ -227,6 +228,23 @@ function run_test() {
       }
 
       return copy;
+  }
+
+  function equalBuffers(a, b) {
+      if (a.byteLength !== b.byteLength) {
+          return false;
+      }
+
+      var aBytes = new Uint8Array(a);
+      var bBytes = new Uint8Array(b);
+
+      for (var i=0; i<a.byteLength; i++) {
+          if (aBytes[i] !== bBytes[i]) {
+              return false;
+          }
+      }
+
+      return true;
   }
 
   return;
